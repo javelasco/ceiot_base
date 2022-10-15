@@ -30,12 +30,14 @@
 
 static const char *TAG = "temp_collector";
 
-static char *BODY = "id="DEVICE_ID"&t=%0.2f&h=%0.2f";
+//static char *BODY = "id="DEVICE_ID"&p=%0.2f&t=%0.2f&h=%0.2f";
+static char *BODY = "{\"id\":\""DEVICE_ID"\",\"p\":%0.2f,\"t\":%0.2f,\"h\":%0.2f}";
 
 static char *REQUEST_POST = "POST "WEB_PATH" HTTP/1.0\r\n"
     "Host: "API_IP_PORT"\r\n"
     "User-Agent: "USER_AGENT"\r\n"
-    "Content-Type: application/x-www-form-urlencoded\r\n"
+    //"Content-Type: application/x-www-form-urlencoded\r\n"
+    "Content-Type: application/json\r\n"
     "Content-Length: %d\r\n"
     "\r\n"
     "%s";
@@ -75,7 +77,7 @@ static void http_get_task(void *pvParameters)
             ESP_LOGI(TAG, "Pressure: %.2f Pa, Temperature: %.2f C", pressure, temperature);
 //            if (bme280p) {
                 ESP_LOGI(TAG,", Humidity: %.2f\n", humidity);
-                sprintf(body, BODY, temperature , humidity );
+                sprintf(body, BODY,pressure, temperature , humidity );
                 sprintf(send_buf, REQUEST_POST, (int)strlen(body),body );
 //	    } else {
 //                sprintf(send_buf, REQUEST_POST, temperature , 0);
